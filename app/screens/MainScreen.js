@@ -8,7 +8,6 @@ import Screen from './../components/Screen';
 import colors from '../config/colors'
 import ToggleSwitch from 'toggle-switch-react-native'
 import LottieView from 'lottie-react-native';
-import socket from '../api/socket';
 import DetailRide from './../components/DetailRide';
 import ServiceApi from '../api/service';
 import * as LocationApi from 'expo-location';
@@ -17,10 +16,11 @@ function MainScreen(props) {
 
     const [isSwitchOn, setIsSwitchOn] = useState(false);
     const [request, setRequest] = useState(null);
-    
-    const getSocketConnection = async () => {
-        socket.setSocket();
-    };
+    const { socket } = useSocket();
+
+    socket.on('request', data => {
+        setRequest(data);
+    });
 
     const requestLocation = async () => {
         try {
@@ -40,7 +40,6 @@ function MainScreen(props) {
 
     useEffect(() => {
         requestLocation();
-        getSocketConnection();
     }, []);
 
     return (
