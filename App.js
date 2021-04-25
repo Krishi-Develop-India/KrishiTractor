@@ -5,7 +5,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import AuthNavigation from './app/navigation/AuthNavigation';
 import SplashScreen from './app/screens/SplashScreen';
 import authStorage from './app/auth/storage';
-import authSocket from './app/socket/storage';
 import AuthContext from './app/auth/context';
 import { Root } from 'native-base';
 import * as Font from 'expo-font';
@@ -20,11 +19,6 @@ export default function App() {
     setUser(token);
   };
 
-  const restoreSocket = async () => {
-    const socket = await authSocket.getSocket();
-    setSocket(socket);
-  };
-
   const [user, setUser] = useState();
   const [socket, setSocket] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -32,7 +26,6 @@ export default function App() {
   useEffect(() => {
     loadFont();
     restoreSession();
-    restoreSocket();
   }, [user]);
 
   const loadFont = async () => {

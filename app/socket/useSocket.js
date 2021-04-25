@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 import { socket_host } from '../config/network';
 import AuthStorage from '../auth/storage';
-import connection from './connection';
+import Network from './connection';
 
 export default useSocket = () => {
 
@@ -16,7 +16,7 @@ export default useSocket = () => {
         if(socket == null) {
             console.log("Making a new socket");
             const token = await AuthStorage.getToken();
-            let newSocket = io('http://192.168.43.103:80', {auth: {token: token}});
+            let newSocket = io(Network.socket_host, {auth: {token: token}});
             console.log(newSocket.connected);
             connection(newSocket, setConnect); //events dispatch
             setSocket(newSocket);

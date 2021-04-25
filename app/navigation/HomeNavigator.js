@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { createStackNavigator } from '@react-navigation/stack'
 import MainScreen from './../screens/MainScreen';
-import SocketContext from '../socket/context';
 import useSocket from '../socket/useSocket';
 import SocketConnectionLost from './../screens/SocketConnectionLost';
 

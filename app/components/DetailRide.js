@@ -3,30 +3,30 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../config/colors'
 import AppText from './AppText';
 
-function DetailRide(props) {
+function DetailRide({price, area, distance, rating, cancelRide, acceptRide}) {
     return (
         <View style={styles.container}>
             <View style={styles.information}>
                 <AppText style={styles.infoText}>Price</AppText>
-                <AppText style={styles.infoTextDetail}>Rs 6000</AppText>
+                <AppText style={styles.infoTextDetail}>{"Rs "+price}</AppText>
             </View>
             <View style={styles.information}>
                 <AppText style={styles.infoText}>Area</AppText>
-                <AppText style={styles.infoTextDetail}>1 Bigha</AppText>
+                <AppText style={styles.infoTextDetail}>{area}</AppText>
             </View>
             <View style={styles.information}>
                 <AppText style={styles.infoText}>Distance</AppText>
-                <AppText style={styles.infoTextDetail}>5 KM</AppText>
+                <AppText style={styles.infoTextDetail}>{distance}</AppText>
             </View>
             <View style={styles.information}>
                 <AppText style={styles.infoText}>Customer Rating</AppText>
-                <AppText style={styles.infoTextDetail}>4.78</AppText>
+                <AppText style={styles.infoTextDetail}>{rating}</AppText>
             </View>
             <View style={styles.buttonsContainer}>
-                <TouchableOpacity style={[styles.button, styles.danger]} activeOpacity={0.6}>
+                <TouchableOpacity style={[styles.button, styles.danger]} activeOpacity={0.6} onPress={cancelRide}>
                     <AppText style={styles.buttonText}>Cancel</AppText>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.accept]} activeOpacity={0.6}>
+                <TouchableOpacity style={[styles.button, styles.accept]} activeOpacity={0.6} onPress={acceptRide}>
                     <AppText style={styles.buttonText}>Accepted </AppText>
                     <AppText style={{color: colors.warning}}>10</AppText>
                 </TouchableOpacity>
