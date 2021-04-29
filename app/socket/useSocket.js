@@ -3,9 +3,9 @@ import { useContext } from 'react';
 import SocketContext from './context';
 import { io } from "socket.io-client";
 
-import { socket_host } from '../config/network';
+import Network from '../config/network';
 import AuthStorage from '../auth/storage';
-import Network from './connection';
+import connection from './connection';
 
 export default useSocket = () => {
 

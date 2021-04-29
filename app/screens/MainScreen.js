@@ -11,14 +11,19 @@ import LottieView from 'lottie-react-native';
 import DetailRide from './../components/DetailRide';
 import ServiceApi from '../api/service';
 import * as LocationApi from 'expo-location';
-import { set } from 'react-native-reanimated';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import * as Notifications from "expo-notifications";
+import * as Permissions from 'expo-permissions';
+import useNotification from '../hooks/useNotification';
 
-function MainScreen(props) {
+function MainScreen({navigation}) {
 
-    const [isSwitchOn, setIsSwitchOn] = useState(false);
+    const [isSwitchOn, setIsSwitchOn] = useState(null);
     const [request, setRequest] = useState(null);
     const { socket } = useSocket();
     const [location, setLocation] = useState();
+
+    const { showNotification } = useNotification();
 
     //80.982301
     //26.872117
@@ -27,6 +32,15 @@ function MainScreen(props) {
     socket.on('request', data => {
         setRequest(data);
     });
+
+    const requestNotification = async () => {
+        const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if(status == 'granted') {
+            console.log('Permission granted');
+        } else {
+            console.log('Permission Denied');
+        }
+    };
 
     const requestLocation = async () => {
         try {
@@ -46,8 +60,17 @@ function MainScreen(props) {
         const result = ServiceApi.switchTractor(locationResult.coords.latitude, locationResult.coords.longitude, currentSwitch);
     }
 
+    const getTheSwitch = () => {
+        socket.emit('getSwitchInfo');
+        socket.on('switchInfo', data => {
+            setIsSwitchOn(data.switch);
+        });
+    };
+
     useEffect(() => {
         requestLocation();
+        requestNotification();
+        getTheSwitch();
     }, []);
 
     const loadMap = ()=> {
@@ -142,20 +165,25 @@ function MainScreen(props) {
     const acceptRide = () => {
         console.log("Ride accepted");
         socket.emit('accept-request', {_id: request._id});
+        navigation.navigate('RideConfirmScreen', {_id: request._id});
     };
 
     return (
         <Screen style={styles.container}>
+            <TouchableOpacity style={styles.profile} activeOpacity={0.7} onPress={() => navigation.toggleDrawer()}>
+                <MaterialCommunityIcons name="account" size={30} color={colors.white} />
+            </TouchableOpacity>
             {loadMap()}
             <View style={styles.options}>
                 <View style={styles.switchContainer}>
                     <AppText style={styles.switchText}>Ready to serve India</AppText>
                     <ToggleSwitch
-                    isOn={isSwitchOn}
+                    isOn={isSwitchOn == null ? false : isSwitchOn}
                     onColor={colors.orange}
                     size="medium"
                     onToggle={onToggleSwitch}
                     style={styles.switch}
+                    disabled={isSwitchOn == null ? true : false}
                     />
                 </View>
                 <View style={styles.loading}>
@@ -201,6 +229,20 @@ const styles = StyleSheet.create({
         borderTopColor: colors.shadow,
         borderTopRightRadius: 5,
         borderTopLeftRadius: 5,
+    },
+    profile: {
+        position: 'absolute',
+        top: 70,
+        right: 10,
+        zIndex: 1,
+        width: 45,
+        height: 45,
+        backgroundColor: colors.light,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: colors.white,
+        borderWidth: 2,
     },
     switch: {
         marginLeft: 10,

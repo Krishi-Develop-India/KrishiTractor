@@ -28,7 +28,6 @@ function DetailRide({price, area, distance, rating, cancelRide, acceptRide}) {
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.button, styles.accept]} activeOpacity={0.6} onPress={acceptRide}>
                     <AppText style={styles.buttonText}>Accepted </AppText>
-                    <AppText style={{color: colors.warning}}>10</AppText>
                 </TouchableOpacity>
             </View>
         </View>
